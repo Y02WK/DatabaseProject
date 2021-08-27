@@ -1,0 +1,49 @@
+{% extends "base.j2" %}
+
+{% block header_text %}
+<div>
+    <h1>AU-OSU Student Enrollment Database - Manage Terms</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<form action="{{ url_for('insert_term') }}" method="POST"> 
+    <fieldset>
+        <p>Add a new Term</p>
+        <label for="termSession">Session: </label>
+        <select name="termSession">
+            <option>Spring</option>
+            <option>Summer</option>
+            <option>Fall</option>
+            <option>Winter</option>
+        </select>
+        <label for="termYear">Year*: </label>
+        <input type="number" name="termYear" min="1901" max="2155" placeholder="YYYY" required />
+        <input type="submit" />
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <span>{{messages[0]}}</span>
+            {% endif %}
+        {% endwith %}
+    </fieldset>
+</form>
+<div>
+    <h1>All Terms</h1>
+    <table>
+        <thead>
+            <th>ID#</th>
+            <th>Session</th>
+            <th>Year</th>
+            <th></th>
+        </thead>
+        {% for term in results %}
+        <tr>
+            <td>{{ term.termID }}</td>
+            <td>{{ term.session }}</td>
+            <td>{{ term.year }}</td>
+            <td><form action="{{ url_for('delete_term') }}" method="POST"><button type="submit" value={{ term.termID }} name="Delete">Delete</button></form></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

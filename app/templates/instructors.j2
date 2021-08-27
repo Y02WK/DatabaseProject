@@ -1,0 +1,60 @@
+{% extends "base.j2" %}
+
+{% block header_text %}
+<div>
+    <h1>AU-OSU Student Enrollment Database - Manage Instructors</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<form id='insertForm' action="{{ url_for('insert_instructor') }}" method="POST">
+<fieldset>
+    <p>Add a New Instructor</p>
+    <form id="instructorForm">
+        <label for="firstName">First name*: </label>
+        <input type="text" name="firstName" required placeholder='Required'/>
+        <label for="middleName">Middle name: </label>
+        <input type="text" name="middleName" />
+        <label for="lastName">Last name*: </label>
+        <input type="text" required name="lastName" placeholder='Required'/>
+
+        <label for="classDepartment">Department: </label>
+        <select name="classDepartment" id="dept">
+            <option value="">None</option>
+            {% for dept in dept_results %}
+            <option value={{ dept.deptID }}>{{ dept.name }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" id="createInstructor"/>
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <span>{{messages[0]}}</span>
+            {% endif %}
+        {% endwith %}
+    </fieldset>
+</form>
+<div>
+    <h1>All Instructors</h1>
+    <table style="text-align: center">
+        <thead>
+            <th>ID#</th>
+            <th>First</th>
+            <th>Middle</th>
+            <th>Last</th>
+            <th>Department</th>
+        </thead>
+        {% for instructor in results %}
+        <tr id="row{{ instructor.instructorID }}">
+            <td>{{ instructor.instructorID }}</td>
+            <td id="fname{{ instructor.instructorID }}">{{ instructor.firstName }}</td>
+            <td id="mname{{ instructor.instructorID }}">{{ instructor.middleName or "-"}}</td>
+            <td id="lname{{ instructor.instructorID }}">{{ instructor.lastName }}</td>
+            <td id="dept{{ instructor.instructorID }}">{{ instructor.department }}</td>
+            <td><button value={{ instructor.instructorID }} onclick=updateInstructorForm(this)>Update</button></td>
+            <td><form action="{{ url_for('delete_instructor') }}" method="POST"><button type="submit" value={{ instructor.instructorID }} name="Delete">Delete</button></form></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.j2" %}
+
+{% block header_text %}
+<div>
+    <h1>
+    AU-OSU Student Enrollment Database - Manage Students
+    </h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<form id='insertForm' action="{{ url_for('insert_student') }}" method="POST">
+    <fieldset>
+        <p>Add a new Student</p>
+        <label for="firstName">First name*: </label>
+        <input type="text" name="firstName" required placeholder='Required'/>
+        <label for="middleName">Middle name: </label>
+        <input type="text" name="middleName" />
+        <label for="lastName">Last name*: </label>
+        <input type="text" required name="lastName" placeholder='Required'/>
+        <input type="submit" id="createStudent"/>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <span>{{messages[0]}}</span>
+            {% endif %}
+        {% endwith %}
+    </fieldset>
+</form>
+<div>
+    <h1>All Students</h1>
+    <table>
+        <thead>
+            <th>ID#</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+        </thead>
+        {% for student in results %}
+        <tr id="row{{ student.studentID }}">
+            <td>{{ student.studentID }}</td>
+            <td id="fname{{ student.studentID }}">{{ student.firstName }}</td>
+            <td id="mname{{ student.studentID }}">{{ student.middleName or "-"}}</td>
+            <td id="lname{{ student.studentID }}">{{ student.lastName }}</td>
+            <td><button value={{ student.studentID }} onclick=updateStudentForm(this)>Update</button></td>
+            <td><form action="{{ url_for('delete_student') }}" method="POST"><button type="submit" value={{ student.studentID }} name="Delete">Delete</button></form></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

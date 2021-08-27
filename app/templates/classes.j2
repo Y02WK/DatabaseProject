@@ -1,0 +1,72 @@
+{% extends "base.j2" %}
+
+{% block header_text %}
+<div>
+    <h1>AU-OSU Student Enrollment Database - Manage Classes</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<form id="insertForm" action="{{ url_for('insert_class') }}" method="POST">
+    <fieldset>
+        <p>Add a new Class</p>
+        <label for="className">Name*: </label>
+        <input type="text" name="className" placeholder="Required" required/>
+
+        <label for="classDepartment">Department: </label>
+        <select name="classDepartment" id="dept">
+            <option value="">None</option> 
+            {% for dept in dept_results %}
+            <option value={{ dept.deptID }}>{{ dept.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="classTerm">Term: </label>
+        <select name="classTerm" id="term">
+            <option value="">None</option>
+            {% for term in term_results %}
+            <option value={{ term.id }}>{{ term.term }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="classInstructor">Instructor: </label>
+        <select name="classInstructor" id="inst">
+            <option value="">None</option>
+            {% for inst in inst_results %}
+            <option value={{ inst.id }}>{{ inst.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" />
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <span>{{messages[0]}}</span>
+            {% endif %}
+        {% endwith %}
+    </fieldset>
+</form>
+    
+
+<div>
+    <h1>All Classes</h1>
+    <table>
+        <thead>
+            <th>ID#</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Term</th>
+            <th>Instructor</th>
+        </thead>
+        {% for class in display_results %}
+        <tr>
+            <td>{{ class.id }}</td>
+            <td>{{ class.name }}</td>
+            <td>{{ class.dept or "-" }}</td>
+            <td>{{ class.term or "-" }}</td>
+            <td>{{ class.instructor or "-" }}</td>
+            <td><button value={{ class.id }} onclick=updateClassForm(this)>Update</button></td>
+            <td><form action="{{ url_for('delete_class') }}" method="POST"><button type="submit" value={{ class.id }} name="Delete">Delete</button></form></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

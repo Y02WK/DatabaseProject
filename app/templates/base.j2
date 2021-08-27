@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/project.css')}}" />
+        {% if style %}
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename=style) }}" />
+        {% endif %}
+        {% if script %}
+        <script src="{{ url_for('static', filename=script) }}" defer ></script>
+        {% endif %}
+        {% if title %}
+        <title>AU-OSU - {{ title }}</title>
+        {% else %}
+        <title>Alternate Universe Oregon State University (AU-OSU)</title>
+        {% endif %}   
+    </head>
+    {% block header_text %}{% endblock %}
+    <div class="topnav">
+        <a id='index' href="{{ url_for('index') }}">Home</a>
+        <a id='students' href="{{ url_for('students') }}">Manage Students</a>
+        <a id='departments' href="{{ url_for('departments') }}">Manage Departments</a>
+        <a id='terms' href="{{ url_for('terms') }}">Manage Terms</a>
+        <a id='classes' href="{{ url_for('classes') }}">Manage Classes</a>
+        <a id='instructors' href="{{ url_for('instructors') }}">Manage Instructors</a>
+        <a id='studentEnrollments' href="{{ url_for('studentEnrollments') }}">Enroll Student into Class</a>
+    </div>
+    
+    {% block content %}{% endblock %}
+</html>

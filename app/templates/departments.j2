@@ -1,0 +1,41 @@
+{% extends "base.j2" %}
+
+{% block header_text %}
+<div>
+    <h1>AU-OSU Student Enrollment Database - Manage Departments</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<form id="insertForm" action="{{ url_for('insert_dept') }}" method="POST">
+<fieldset>
+    <p>Add a new Department</p>
+    <label for="deptName">Name*: </label>
+    <input type="text" name="deptName" placeholder="Required" required/>
+    <input type="submit" id="createDepartment"/>
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <span>{{messages[0]}}</span>
+            {% endif %}
+        {% endwith %}
+        </fieldset>
+    </form>
+<div>
+    <h1>All Departments</h1>
+    <table>
+        <thead>
+        <th>ID#</th>
+        <th>Name</th>
+        </thead>
+        {% for dept in results %}
+         <tr id="row{{ dept.deptID }}">
+            <td>{{ dept.deptID }}</td>
+            <td>{{ dept.name }}</td>
+            <td><button value={{ dept.deptID }} onclick=updateDeptForm(this)>Update</button></td>
+            <td><form action="{{ url_for('delete_dept') }}" method="POST"><button type="submit" value={{ dept.deptID }}
+            name="Delete">Delete</button></form></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

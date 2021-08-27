@@ -1,0 +1,98 @@
+{% extends "base.j2" %}
+
+{% block header_text %}
+<div>
+    <h1>AU-OSU Student Enrollment Database - Manage Student Enrollments</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<form id="insertForm" action="{{ url_for('insert_studentEnrollment') }}" method="POST">
+<fieldset>
+    <p><b>Enroll Student into Class</b></p>
+    <form id="studentEnrollmentForm">
+        <label for="class">Class: </label>
+        <select name="class" id="class">
+            {% for class in class_results %}
+            <option value={{ class.classID }}>{{ class.classID }}</option>
+            {% endfor %}
+        </select>
+        <label for="student">Student: </label>
+        <select name="student" id="student">
+            {% for student in student_results %}
+            <option value={{ student.studentID }}>{{ student.studentID }}</option>
+            {% endfor %}
+        </select>
+<input type="submit" />
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <span>{{messages[0]}}</span>
+            {% endif %}
+        {% endwith %}
+    </fieldset>
+</form>
+<br>
+    <fieldset>
+    <p><b>View Student Roster by Class</b></p>
+    <p>Search only classes with students currently enrolled. </p>
+    <form id="searchByClassID" action="{{ url_for('search_studentEnrollment') }}" method="POST">
+        <label for="enrollClass"> Class: </label>
+        <select name="enrollClass" id="enrollClass">
+            <option value="">None</option>
+            {% for enrollClass in enrollment_results %}
+            <option value={{ enrollClass.class }}>{{ enrollClass.class }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" />
+    </form>
+</fieldset>
+<div>
+    <h1>Search Results</h1>
+    <table>
+    <thead>
+            <th>Class ID</th>
+            <th>Class</th>
+            <th>Student ID</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+    </thead>
+    {% for studentEnrollment in results %}
+        <tr>
+            <td>{{ studentEnrollment.classID }}</td>
+            <td>{{ studentEnrollment.className }}</td>
+            <td>{{ studentEnrollment.studentID }}</td>
+            <td>{{ studentEnrollment.first }}</td>
+            <td>{{ studentEnrollment.middle or "-" }}</td>
+            <td>{{ studentEnrollment.last }}</td>
+        </tr>
+        {% endfor %}
+        </table>
+</div>
+<div>
+    <h1>All Student Enrollments</h1>
+    <table>
+        <thead>
+            <th>Class ID</th>
+            <th>Class</th>
+            <th>Student ID</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+        </thead>
+        {% for studentEnrollment in display_results %}
+        <tr>
+            <td>{{ studentEnrollment.classID }}</td>
+            <td>{{ studentEnrollment.className }}</td>
+            <td>{{ studentEnrollment.studentID }}</td>
+            <td>{{ studentEnrollment.first }}</td>
+            <td>{{ studentEnrollment.middle or "-" }}</td>
+            <td>{{ studentEnrollment.last }}</td>
+            <td><form action="{{ url_for('delete_studentEnrollment') }}" method="POST">
+            {% set myList = studentEnrollment.classID ~ ','  ~ studentEnrollment.studentID %}
+            <button type="submit" value={{ myList }} name="Delete">Delete</button></form></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
