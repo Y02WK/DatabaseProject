@@ -2,5 +2,5 @@
 
 Website simulating a simple administrative system with CRUD functionalities for maintaining student enrolment data.
 
-Created using Python, Flask and MySQL.
+Created using Python, Flask, Javascript, HTML, CSS and MySQL.
 
